@@ -2,6 +2,7 @@ namespace aoc_csharp.puzzles;
 
 public sealed class Day01 : PuzzleBaseLines
 {
+
     public override string? FirstPuzzle()
     {
         var turns = Data

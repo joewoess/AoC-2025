@@ -16,16 +16,3 @@ This can be used to test different solutions later without having to commit the 
 |            10 |   part1    |   part2    |    part1    |    part2    |
 |            11 |   part1    |   part2    |    part1    |    part2    |
 |            12 |   part1    |   part2    |    part1    |    part2    |
-|            13 |   part1    |   part2    |    part1    |    part2    |
-|            14 |   part1    |   part2    |    part1    |    part2    |
-|            15 |   part1    |   part2    |    part1    |    part2    |
-|            16 |   part1    |   part2    |    part1    |    part2    |
-|            17 |   part1    |   part2    |    part1    |    part2    |
-|            18 |   part1    |   part2    |    part1    |    part2    |
-|            19 |   part1    |   part2    |    part1    |    part2    |
-|            20 |   part1    |   part2    |    part1    |    part2    |
-|            21 |   part1    |   part2    |    part1    |    part2    |
-|            22 |   part1    |   part2    |    part1    |    part2    |
-|            23 |   part1    |   part2    |    part1    |    part2    |
-|            24 |   part1    |   part2    |    part1    |    part2    |
-|            25 |   part1    |   part2    |    part1    |    part2    |

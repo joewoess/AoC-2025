@@ -10,7 +10,7 @@ public static class Input
 {
     private static string DataDirectory => Config.IsDemo ? Config.InputPathDemo : Config.InputPathReal;
     private static string DataFileName(IPuzzle puzzle) => $"{puzzle.TypeName.ToLower()}.txt";
-    private static string DataFilePath(IPuzzle puzzle) => Path.Combine(DataDirectory, DataFileName(puzzle));
+    private static string DataFilePath(IPuzzle puzzle) => Path.Combine(AppContext.BaseDirectory, DataDirectory, DataFileName(puzzle));
 
     /// <summary>
     ///     Attempts to retrieve the input data associated with the specified puzzle implementation.
