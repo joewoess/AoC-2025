@@ -21,20 +21,7 @@ All implemented solutions will be linked in the [Challenges table](##Challenges)
 |   9 | [TBA](https://adventofcode.com/2025/day/9)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |  10 | [TBA](https://adventofcode.com/2025/day/10)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |  11 | [TBA](https://adventofcode.com/2025/day/11)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  12 | [TBA.io](https://adventofcode.com/2025/day/12)         |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  13 | [TBA](https://adventofcode.com/2025/day/13)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  14 | [TBA](https://adventofcode.com/2025/day/14)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  15 | [TBA](https://adventofcode.com/2025/day/15)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  16 | [TBA](https://adventofcode.com/2025/day/16)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  17 | [TBA](https://adventofcode.com/2025/day/17)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  18 | [TBA](https://adventofcode.com/2025/day/18)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  19 | [TBA](https://adventofcode.com/2025/day/19)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  20 | [TBA](https://adventofcode.com/2025/day/20)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  21 | [TBA](https://adventofcode.com/2025/day/21)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  22 | [TBA](https://adventofcode.com/2025/day/22)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  23 | [TBA](https://adventofcode.com/2025/day/23)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  24 | [TBA](https://adventofcode.com/2025/day/24)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  25 | [TBA](https://adventofcode.com/2025/day/25)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|  12 | [TBA](https://adventofcode.com/2025/day/12)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
 
 ---
 
