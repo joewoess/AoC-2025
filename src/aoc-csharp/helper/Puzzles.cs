@@ -43,4 +43,19 @@ public static class Puzzles
 
     /** Parse the day integer from a typename */
     private static int? ParseDay(string input) => int.TryParse(string.Join("", input.Where(char.IsDigit)), out var day) ? day : null;
+
+    private static string ResolvePuzzle(this IPuzzle? puzzle, bool resolveFirst = true) =>
+        resolveFirst switch
+        {
+            true => puzzle is not null && !(Config.SkipLongRunning && puzzle.FirstIsLongRunning())
+                ? puzzle.FirstResult
+                : Config.SkippedMessage,
+            false => puzzle is not null && !(Config.SkipLongRunning && puzzle.SecondIsLongRunning())
+                ? puzzle.SecondResult
+                : Config.SkippedMessage
+        };
+
+    public static string ResolveFirstPuzzle(this IPuzzle? puzzle) => ResolvePuzzle(puzzle, true);
+    public static string ResolveSecondPuzzle(this IPuzzle? puzzle) => ResolvePuzzle(puzzle, false);
+
 }

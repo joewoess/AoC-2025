@@ -31,14 +31,6 @@ public static class Config
     public static readonly bool TryAndUseConsoleWidth = true;
     public static readonly bool PrintAfterLastImpl = false;
 
-    // Messages
-    public static readonly string[] GreetingMessageLines =
-    [
-        $"AdventOfCode Runner for {CurrentChallengeYear}",
-        $"Challenge at: https://adventofcode.com/{CurrentChallengeYear}/",
-        "Author: Johannes Wöß (https://github.com/joewoess)"
-    ];
-
     public const string NoSolutionMessage = "NO IMPL";
     public const string NoDataMessage = "NO DATA";
     public const string NoResultMessage = "NO RESULT";
@@ -46,12 +38,20 @@ public static class Config
 
     // Constants
 
-    public const int ResultColumnPadding = 30;
-    public const int InfoColumnPadding = 15;
+    public const int ResultColumnRatio = 30;
+    public const int InfoColumnRatio = 5;
+    public const int TimingColumnRatio = 10;
     public const int MaxChallengeDays = CurrentChallengeYear < 2025 ? 25 : 12; // Starting 2025, only 12 days of challenges are available
     public const int CurrentChallengeYear = 2025;
-    public const char LineArtChar = '-';
     public const string ImplementationNamespace = "aoc_csharp.puzzles";
     public const string DataFileNamingConvention = "day{0:D2}.txt";
     public const string DayMessageConvention = "Day {0:D2}";
+
+    // Application Constants
+
+    public const string ApplicationReadableName = "AdventOfCode C# Runner:";
+    public const string ApplicationVersion = "1.0.0";
+    public const string AuthorName = "Johannes Wöß";
+    public const string AuthorGithubRepo = "https://github.com/joewoess/";
+
 }

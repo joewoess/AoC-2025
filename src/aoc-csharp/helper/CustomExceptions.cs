@@ -9,3 +9,5 @@ public class UnknownDirectionException : Exception
     public UnknownDirectionException(Direction direction) : base($"Unknown direction {direction}") { }
     public UnknownDirectionException(Point currentPoint, Point target) : base($"Unknown direction towards {target} from {currentPoint}") { }
 };
+
+public class InvalidLiveDisplayOperationException() : InvalidOperationException("Tried to perform an invalid operation on the live display context.");

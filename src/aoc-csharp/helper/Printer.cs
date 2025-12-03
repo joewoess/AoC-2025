@@ -1,3 +1,7 @@
+using System.Text;
+using aoc_csharp.helper.spectre;
+using Spectre.Console;
+
 namespace aoc_csharp.helper;
 
 /// <summary>
@@ -10,139 +14,66 @@ namespace aoc_csharp.helper;
 /// guaranteed for concurrent modifications of shared configuration properties.</remarks>
 public static class Printer
 {
-    /// <summary>
-    ///     Column headers for the results table 
-    /// </summary>
-    private static IEnumerable<(string Message, int Padding)> ColumnHeaders { get; } =
-    [
-        ("Day", Config.InfoColumnPadding),
-        ("Type", Config.InfoColumnPadding),
-        ("1st", Config.ResultColumnPadding),
-        ("2nd", Config.ResultColumnPadding)
-    ];
-
-    /// <summary>
-    ///     The estimated width of the console window use for printing the separator line
-    /// </summary>
-    public static int ConsoleWidth { get; set; } = 105;
-
-    /// <summary>
-    ///     Try and update the console width. This can fail if the console isn't a real console, e.g. when running emulated
-    /// </summary>
-    /// <returns>True if successfully updated, otherwise false</returns>
-    public static bool TryUpdateConsoleWidth()
+    // Some stylings used throughout the printer
+    private static Style DebugStyle => Style.Parse("grey");
+    private static readonly Panel HeaderPanel = new(
+        Align.Center(
+            new Rows(
+                $"{Config.ApplicationReadableName} for {Config.CurrentChallengeYear}".AsMarkup("bold blue"),
+                new Grid()
+                    .AddColumn()
+                    .AddColumn()
+                    .AddRow("Challenge at:".AsMarkup("lightgreen"), new Markup($"AdventOfCode [link]https://adventofcode.com/{Config.CurrentChallengeYear}/[/]"))
+                    .AddRow("Author:".AsMarkup("lightgreen"), new Markup($"{Config.AuthorName} ([link]{Config.AuthorGithubRepo}[/])"))
+    )))
     {
-        try
-        {
-            ConsoleWidth = Console.WindowWidth;
-            return true;
-        }
-        catch
-        {
-            DebugMsg($"Could not set console width. Defaulting to {ConsoleWidth} (Covers early debug logs)");
-        }
+        Border = BoxBorder.Rounded,
+        Expand = true,
+        BorderStyle = new Style(Color.Blue)
+    };
 
-        return false;
-    }
+    // Live display context and related fields for updating logs during live table updates
+    private static LiveDisplayContext? liveContext = null;
+    private static StringBuilder? logsDuringLive = null;
+    private static List<Panel>? logRendererPerDay = null;
+    private static Table? liveTable = null;
+    private static int? currentDay = null;
 
     /// <summary>
     ///     Prints the beginning header of console output
     /// </summary>
     public static void PrintGreeting()
     {
-        PrintSeparator();
-        var lines = Config.GreetingMessageLines;
-        var longestLine = lines.Max(line => line.Length);
-        var (padLeft, padRight) = ((ConsoleWidth - longestLine) / 2, (ConsoleWidth - 3 + longestLine) / 2);
-
-        Console.WriteLine(string.Join(Environment.NewLine, lines.Select(line => $"|{new string(' ', padLeft)}{line.PadRight(padRight)}|")));
-        PrintSeparator();
+        AnsiConsole.Write(HeaderPanel);
     }
 
     /// <summary>
-    ///     Prints the result of a days puzzle in the result table
+    ///     Create a header for the results table
     /// </summary>
-    /// <param name="day">Integer number corresponding to a days number (usually 1-25/1-12)</param>
-    public static void PrintSolutionMessage(int day)
+    public static Table CreateTableWithHeader()
     {
-        var implementationsOfDay = Puzzles.PuzzleImplementationDict()[day];
-        foreach (var impl in implementationsOfDay)
-        {
-            var firstPuzzle = Config.ShowFirst && !(Config.SkipLongRunning && impl.FirstIsLongRunning()) ? impl.FirstResult : Config.SkippedMessage;
-            var secondPuzzle = Config.ShowSecond && !(Config.SkipLongRunning && impl.SecondIsLongRunning()) ? impl.SecondResult : Config.SkippedMessage;
-
-            var columnsToPrint = new (string Message, int Padding)[]
-            {
-                (string.Format(Config.DayMessageConvention, day), Config.InfoColumnPadding),
-                (impl.TypeName, Config.InfoColumnPadding),
-                (firstPuzzle, Config.ResultColumnPadding),
-                (secondPuzzle, Config.ResultColumnPadding)
-            }.Select(pair => pair.Message.PadLeft(pair.Padding));
-
-            Console.WriteLine($"| {string.Join(" | ", columnsToPrint)} |");
-        }
-    }
-
-    /// <summary>
-    ///     Prints the result of all days in the result table
-    /// </summary>
-    public static void PrintAllSolutionMessages()
-    {
-        if (!Config.PrintAfterLastImpl)
-        {
-            var lastDay = Puzzles.PuzzleImplementationDict()
-                .Last(entry => !(entry.Value.Count > 0 && entry.Value.First() == Puzzles.NoImplementation))
-                .Key;
-            Puzzles.PuzzleImplementationDict().Keys
-                .Where(day => day <= lastDay)
-                .ToList()
-                .ForEach(PrintSolutionMessage);
-        }
-        else
-        {
-            Puzzles.PuzzleImplementationDict().Keys
-                .ToList()
-                .ForEach(PrintSolutionMessage);
-        }
-    }
-
-    /// <summary>
-    ///     Prints the result of the last day with an implementation in the result table
-    /// </summary>
-    public static void PrintLastSolutionMessage()
-    {
-        var lastDay = Puzzles.PuzzleImplementationDict()
-            .Last(entry => entry.Value.Count > 0 && entry.Value.FirstOrDefault() != Puzzles.NoImplementation)
-            .Key;
-        PrintSolutionMessage(lastDay);
-    }
-
-    /// <summary>
-    ///     Prints a header for the results table
-    /// </summary>
-    public static void PrintResultHeader()
-    {
-        var columnsHeadersToPrint = ColumnHeaders.Select(header => header.Message.PadLeft(header.Padding));
-        Console.WriteLine($"| {string.Join(" | ", columnsHeadersToPrint)} |");
-    }
-
-
-    /// <summary>
-    ///     Prints a separator line spanning the console width
-    /// </summary>
-    /// <param name="onlyDuringDebug">Optional param defaulting to false, will make this a debug only print if true</param>
-    public static void PrintSeparator(bool onlyDuringDebug = false)
-    {
-        if (!onlyDuringDebug || Config.IsDebug) Console.WriteLine(new string(Config.LineArtChar, ConsoleWidth));
+        return new Table()
+            .Expand()
+            .Border(TableBorder.Rounded)
+            .Alignment(Justify.Center)
+            .AddColumn(TableCol("Day", "bold blue", Config.InfoColumnRatio))
+            .AddColumn(TableCol("Type", "bold grey", Config.InfoColumnRatio))
+            .AddColumn(TableCol("First puzzle", "bold blue", Config.ResultColumnRatio))
+            .AddColumn(TableCol("Time 1st", "bold grey", Config.TimingColumnRatio))
+            .AddColumn(TableCol("Second puzzle", "bold blue", Config.ResultColumnRatio))
+            .AddColumn(TableCol("Time 2nd", "bold grey", Config.TimingColumnRatio))
+            .ShowRowSeparators()
+            ;
     }
 
     /// <summary>
     ///     Prints a message only if the static variable <see cref="Config.IsDebug"/> is set
     /// </summary>
     /// <param name="message">Message to print</param>
-    public static void DebugMsg(string message)
+    public static void DebugMsg(string message, bool addNewLine = true)
     {
-        if (Config.IsDebug) Console.WriteLine(message);
+        if (!Config.IsDebug) return;
+        PrintOrPostInPanel(message, addNewLine);
     }
 
     /// <summary>
@@ -157,9 +88,144 @@ public static class Printer
     {
         if (!Config.IsDebug) return;
 
-        if (prefix != null) Console.Write(prefix);
+        if (prefix != null) DebugMsg(prefix, false);
         var actuallyTaken = collection.Take(maxCount).ToList();
         var andMore = actuallyTaken.Count == maxCount ? $"... and {collection.Count() - actuallyTaken.Count} more" : string.Empty;
-        Console.WriteLine($"{string.Join(separator, actuallyTaken)} {andMore}");
+        DebugMsg($"{string.Join(separator, actuallyTaken)} {andMore}");
+    }
+
+    /// <summary>
+    ///     Starts a live updating results table for puzzle implementations
+    /// </summary>
+    /// <param name="explicitDaysRequested">Explicitley requested days if any</param>
+    public static void StartLiveResultsTable(List<int> explicitDaysRequested)
+    {
+        // Determine days to process
+        var implementationDict = Puzzles.PuzzleImplementationDict();
+        var daysToProcess = implementationDict.CalculateDaysToProcess(explicitDaysRequested);
+
+        // Start stopwatch
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        AnsiConsole.Write(Align.Right("Starting execution...".AsMarkup("lightgreen")));
+
+        // Prepare live table and log containers
+        liveTable = CreateTableWithHeader();
+        logsDuringLive = new StringBuilder();
+        logRendererPerDay = [];
+        var layout = new Rows([.. logRendererPerDay, liveTable]);
+
+        // Start live context
+        AnsiConsole.Live(layout)
+            .Start(ctx =>
+            {
+                liveContext = ctx;
+                foreach (var day in daysToProcess)
+                {
+                    currentDay = day;
+                    logRendererPerDay.Add(CreateLiveLogPanel());
+                    logsDuringLive.Clear();
+                    var implementationsOfDay = implementationDict[day];
+                    if (implementationsOfDay.Count == 0)
+                    {
+                        AddPlaceholderTableRow(day);
+                        continue;
+                    }
+                    foreach (var impl in implementationsOfDay)
+                    {
+                        var startTime = sw.Elapsed;
+                        string firstPuzzle = impl.ResolveFirstPuzzle();
+                        var midTime = sw.Elapsed;
+                        string secondPuzzle = impl.ResolveSecondPuzzle();
+                        var endTime = sw.Elapsed;
+
+                        liveTable.AddRow(
+                            string.Format(Config.DayMessageConvention, day).AsMarkup(),
+                            impl.TypeName.AsMarkup("grey"),
+                            firstPuzzle.AsMarkup(),
+                            (midTime - startTime).Readable().AsMarkup("grey"),
+                            secondPuzzle.AsMarkup(),
+                            (endTime - midTime).Readable().AsMarkup("grey")
+                        );
+                        ctx.Refresh();
+                    }
+                }
+                logsDuringLive = null;
+                logRendererPerDay = null;
+                liveTable = null;
+                currentDay = null;
+                liveContext = null;
+            });
+
+        // Finished execution
+        sw.Stop();
+        AnsiConsole.Write(Align.Right($"Finished in {sw.Elapsed.Readable()}".AsMarkup("lightgreen")));
+    }
+
+    private static void AddPlaceholderTableRow(int day)
+    {
+        liveTable?.AddRow(
+            string.Format(Config.DayMessageConvention, day).AsMarkup(),
+            Config.NoSolutionMessage.AsMarkup("grey"),
+            Config.NoSolutionMessage.AsMarkup(),
+            TimeUtil.Readable(null).AsMarkup("grey"),
+            Config.NoSolutionMessage.AsMarkup(),
+            TimeUtil.Readable(null).AsMarkup("grey")
+        );
+    }
+
+    private static List<int> CalculateDaysToProcess(this Dictionary<int, List<IPuzzle>> implementationDict, List<int> explicitDaysRequested)
+    {
+        var lastDay = implementationDict
+            .Last(entry => entry.Value.Count > 0 && entry.Value.First() != Puzzles.NoImplementation)
+            .Key;
+
+        var daysToProcess = (explicitDaysRequested, Config.ShowLast, Config.PrintAfterLastImpl) switch
+        {
+            ({ Count: > 0 }, _, _) => explicitDaysRequested,
+            (_, true, _) => [lastDay],
+            (_, _, false) => [.. implementationDict.Keys.Where(day => day <= lastDay)],
+            _ => [.. implementationDict.Keys]
+        };
+        return daysToProcess;
+    }
+
+
+
+    private static TableColumn TableCol(string header, string markup, int width) =>
+        new TableColumn(header.AsMarkup(markup)).RightAligned().Width(width);
+
+    private static void PrintOrPostInPanel(string message, bool addNewLine = true)
+    {
+        if (liveContext == null || logsDuringLive == null || logRendererPerDay == null || liveTable == null)
+        {
+            // Not in live context, just print directly
+            AnsiConsole.Write(new Text(addNewLine ? message + "\n" : message, DebugStyle));
+        }
+        else
+        {
+            // In live context, append to live log panel
+            logsDuringLive.AppendLine(message);
+            logRendererPerDay[^1] = CreateLiveLogPanel();
+            liveContext.UpdateTarget(new Rows(
+                [
+                    ..logRendererPerDay,
+                    liveTable
+                ]
+            ));
+            liveContext.Refresh();
+        }
+    }
+
+    private static Panel CreateLiveLogPanel()
+    {
+        if (liveContext == null || logsDuringLive == null || logRendererPerDay == null || liveTable == null || currentDay == null)
+            throw new InvalidLiveDisplayOperationException();
+        return new Panel(new Markup(logsDuringLive.ToString(), DebugStyle))
+        {
+            Expand = true,
+            Header = new PanelHeader($"Debug for day{currentDay}", Justify.Center),
+            Border = BoxBorder.Rounded,
+            BorderStyle = new Style(Color.Grey)
+        };
     }
 }

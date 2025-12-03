@@ -10,6 +10,8 @@
 
   <ItemGroup>
     <PackageReference Include="RLib.Tsp" Version="1.1.0-gb7eaa9bb98" />
+    <PackageReference Include="Spectre.Console" Version="0.54.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.53.1" />
   </ItemGroup>
 
   <ItemGroup>
