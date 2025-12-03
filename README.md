@@ -12,7 +12,7 @@ All implemented solutions will be linked in the [Challenges table](##Challenges)
 | --: | :----------------------------------------------------- | :---------------------------------------: | :----: | :--------: | :--: | :----: |
 |   1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Csharp](src/aoc-csharp/puzzles/Day01.cs) | FSharp | Typescript | Rust | Python |
 |   2 | [Gift Shop](https://adventofcode.com/2025/day/2)       | [Csharp](src/aoc-csharp/puzzles/Day02.cs) | FSharp | Typescript | Rust | Python |
-|   3 | [TBA](https://adventofcode.com/2025/day/3)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|   3 | [Lobby](https://adventofcode.com/2025/day/3)           | [Csharp](src/aoc-csharp/puzzles/Day03.cs) | FSharp | Typescript | Rust | Python |
 |   4 | [TBA](https://adventofcode.com/2025/day/4)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |   5 | [TBA](https://adventofcode.com/2025/day/5)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |   6 | [TBA](https://adventofcode.com/2025/day/6)             |                  Csharp                   | FSharp | Typescript | Rust | Python |

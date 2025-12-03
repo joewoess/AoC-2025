@@ -50,6 +50,7 @@ public static class CommandAppFactory
         config.SetApplicationName(Config.ApplicationReadableName);
         config.SetApplicationVersion(Config.ApplicationVersion);
         config.CaseSensitivity(CaseSensitivity.None);
+        config.PropagateExceptions();
         config.SetExceptionHandler((ex, resolver) =>
         {
             AnsiConsole.WriteException(ex, ExceptionFormats.NoStackTrace);

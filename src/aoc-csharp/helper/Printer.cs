@@ -15,7 +15,7 @@ namespace aoc_csharp.helper;
 public static class Printer
 {
     // Some stylings used throughout the printer
-    private static Style DebugStyle => Style.Parse("grey");
+    private readonly static Style DebugStyle = Style.Parse("grey");
     private static readonly Panel HeaderPanel = new(
         Align.Center(
             new Rows(
@@ -220,12 +220,12 @@ public static class Printer
     {
         if (liveContext == null || logsDuringLive == null || logRendererPerDay == null || liveTable == null || currentDay == null)
             throw new InvalidLiveDisplayOperationException();
-        return new Panel(new Markup(logsDuringLive.ToString(), DebugStyle))
+        return new Panel(new Text(logsDuringLive.ToString(), DebugStyle))
         {
             Expand = true,
             Header = new PanelHeader($"Debug for day{currentDay}", Justify.Center),
             Border = BoxBorder.Rounded,
-            BorderStyle = new Style(Color.Grey)
+            BorderStyle = DebugStyle
         };
     }
 }
