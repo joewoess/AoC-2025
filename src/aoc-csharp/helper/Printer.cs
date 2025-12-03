@@ -1,6 +1,7 @@
 using System.Text;
 using aoc_csharp.helper.spectre;
 using Spectre.Console;
+using static aoc_csharp.helper.spectre.MarkupExtensions;
 
 namespace aoc_csharp.helper;
 
@@ -15,22 +16,16 @@ namespace aoc_csharp.helper;
 public static class Printer
 {
     // Some stylings used throughout the printer
-    private readonly static Style DebugStyle = Style.Parse("grey");
-    private static readonly Panel HeaderPanel = new(
+    private static readonly Panel HeaderPanel = PanelWithStyle(HeaderStyle,
         Align.Center(
             new Rows(
-                $"{Config.ApplicationReadableName} for {Config.CurrentChallengeYear}".AsMarkup("bold blue"),
+                $"{Config.ApplicationReadableName} for {Config.CurrentChallengeYear}".AsMarkup(HeaderStyle),
                 new Grid()
                     .AddColumn()
                     .AddColumn()
-                    .AddRow("Challenge at:".AsMarkup("lightgreen"), new Markup($"AdventOfCode [link]https://adventofcode.com/{Config.CurrentChallengeYear}/[/]"))
-                    .AddRow("Author:".AsMarkup("lightgreen"), new Markup($"{Config.AuthorName} ([link]{Config.AuthorGithubRepo}[/])"))
-    )))
-    {
-        Border = BoxBorder.Rounded,
-        Expand = true,
-        BorderStyle = new Style(Color.Blue)
-    };
+                    .AddRow("Challenge at:".AsMarkup(InfoStyle), new Markup($"AdventOfCode [link]https://adventofcode.com/{Config.CurrentChallengeYear}/[/]"))
+                    .AddRow("Author:".AsMarkup(InfoStyle), new Markup($"{Config.AuthorName} ([link]{Config.AuthorGithubRepo}[/])"))
+    )));
 
     // Live display context and related fields for updating logs during live table updates
     private static LiveDisplayContext? liveContext = null;
@@ -90,7 +85,8 @@ public static class Printer
 
         if (prefix != null) DebugMsg(prefix, false);
         var actuallyTaken = collection.Take(maxCount).ToList();
-        var andMore = actuallyTaken.Count == maxCount ? $"... and {collection.Count() - actuallyTaken.Count} more" : string.Empty;
+        var collectionCount = collection.Count();
+        var andMore = actuallyTaken.Count < collectionCount ? $"... and {collectionCount - actuallyTaken.Count} more" : string.Empty;
         DebugMsg($"{string.Join(separator, actuallyTaken)} {andMore}");
     }
 
@@ -103,10 +99,11 @@ public static class Printer
         // Determine days to process
         var implementationDict = Puzzles.PuzzleImplementationDict();
         var daysToProcess = implementationDict.CalculateDaysToProcess(explicitDaysRequested);
+        // TODO add vanishing day / daysToProcess status indicator
 
         // Start stopwatch
         var sw = System.Diagnostics.Stopwatch.StartNew();
-        AnsiConsole.Write(Align.Right("Starting execution...".AsMarkup("lightgreen")));
+        AnsiConsole.Write(Align.Right("Starting execution...".AsMarkup(InfoStyle)));
 
         // Prepare live table and log containers
         liveTable = CreateTableWithHeader();
@@ -127,7 +124,7 @@ public static class Printer
                     var implementationsOfDay = implementationDict[day];
                     if (implementationsOfDay.Count == 0)
                     {
-                        AddPlaceholderTableRow(day);
+                        AddStyledRow(day);
                         continue;
                     }
                     foreach (var impl in implementationsOfDay)
@@ -135,17 +132,17 @@ public static class Printer
                         var startTime = sw.Elapsed;
                         string firstPuzzle = impl.ResolveFirstPuzzle();
                         var midTime = sw.Elapsed;
+
+                        // TODO print rule in debug panel between puzzles
+
+                        AddStyledRow(day, impl.TypeName, firstPuzzle, midTime - startTime);
+                        ctx.Refresh();
+
                         string secondPuzzle = impl.ResolveSecondPuzzle();
                         var endTime = sw.Elapsed;
 
-                        liveTable.AddRow(
-                            string.Format(Config.DayMessageConvention, day).AsMarkup(),
-                            impl.TypeName.AsMarkup("grey"),
-                            firstPuzzle.AsMarkup(),
-                            (midTime - startTime).Readable().AsMarkup("grey"),
-                            secondPuzzle.AsMarkup(),
-                            (endTime - midTime).Readable().AsMarkup("grey")
-                        );
+                        liveTable.RemoveRow(liveTable.Rows.Count - 1);
+                        AddStyledRow(day, impl.TypeName, firstPuzzle, midTime - startTime, secondPuzzle, endTime - midTime);
                         ctx.Refresh();
                     }
                 }
@@ -158,19 +155,7 @@ public static class Printer
 
         // Finished execution
         sw.Stop();
-        AnsiConsole.Write(Align.Right($"Finished in {sw.Elapsed.Readable()}".AsMarkup("lightgreen")));
-    }
-
-    private static void AddPlaceholderTableRow(int day)
-    {
-        liveTable?.AddRow(
-            string.Format(Config.DayMessageConvention, day).AsMarkup(),
-            Config.NoSolutionMessage.AsMarkup("grey"),
-            Config.NoSolutionMessage.AsMarkup(),
-            TimeUtil.Readable(null).AsMarkup("grey"),
-            Config.NoSolutionMessage.AsMarkup(),
-            TimeUtil.Readable(null).AsMarkup("grey")
-        );
+        AnsiConsole.Write(Align.Right($"Finished in {sw.Elapsed.Readable()}".AsMarkup(InfoStyle)));
     }
 
     private static List<int> CalculateDaysToProcess(this Dictionary<int, List<IPuzzle>> implementationDict, List<int> explicitDaysRequested)
@@ -220,12 +205,22 @@ public static class Printer
     {
         if (liveContext == null || logsDuringLive == null || logRendererPerDay == null || liveTable == null || currentDay == null)
             throw new InvalidLiveDisplayOperationException();
-        return new Panel(new Text(logsDuringLive.ToString(), DebugStyle))
-        {
-            Expand = true,
-            Header = new PanelHeader($"Debug for day{currentDay}", Justify.Center),
-            Border = BoxBorder.Rounded,
-            BorderStyle = DebugStyle
-        };
+        return PanelWithStyle(DebugStyle, new Text(logsDuringLive.ToString(), DebugStyle))
+                .Header(new PanelHeader($"Debug for day{currentDay}", Justify.Center));
+    }
+
+    private static void AddStyledRow(int day, string? type = null, string? part1 = null,
+                                    TimeSpan? time1 = null, string? part2 = null, TimeSpan? time2 = null)
+    {
+        if (liveContext == null || logsDuringLive == null || logRendererPerDay == null || liveTable == null || currentDay == null)
+            throw new InvalidLiveDisplayOperationException();
+        liveTable.AddRow(
+                            string.Format(Config.DayMessageConvention, day).AsMarkup(),
+                            (type ?? Config.NoSolutionMessage).AsMarkup(DebugStyle),
+                            (part1 ?? Config.NoSolutionMessage).AsMarkup(),
+                            time1.Readable().AsMarkup(DebugStyle),
+                            (part2 ?? (part1 is null ? Config.NoSolutionMessage : Config.NoResultYetMessage)).AsMarkup(),
+                            time2.Readable().AsMarkup(DebugStyle)
+                        );
     }
 }

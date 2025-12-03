@@ -32,6 +32,7 @@ public static class Config
     public static readonly bool PrintAfterLastImpl = false;
 
     public const string NoSolutionMessage = "NO IMPL";
+    public const string NoResultYetMessage = "RUNNING";
     public const string NoDataMessage = "NO DATA";
     public const string NoResultMessage = "NO RESULT";
     public const string SkippedMessage = "SKIPPED";
