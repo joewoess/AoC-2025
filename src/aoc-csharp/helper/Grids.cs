@@ -162,6 +162,36 @@ public static class Grids
     }
 
     /// <summary>
+    ///     Converts a jagged two dimensional grid into a dictionary of [Point, Value] with filtering depending on value
+    /// </summary>
+    /// <typeparam name="TGrid"></typeparam>
+    /// <param name="grid">Jagged two dimensional grid to convert</param>
+    /// <param name="skipFilterPoints">Set to true if you want all positions to be created as an entry in the dictionary</param>
+    /// <param name="validPointCheck">If filter is activated checks the value of the grid to be a valid point or otherwise skips the entry into the dict. 
+    /// Defaults to checking if neither null or whitespace string</param>
+    /// <returns>
+    ///     The dictionary containing point keys and associated values. Each key represents a
+    ///     position in the grid that had a valid value according to filtering
+    /// </returns>
+    public static Dictionary<Point, TGrid> AsPointDict<TGrid>(this TGrid[][] grid, bool skipFilterPoints = false, Func<TGrid, bool>? validPointCheck = null)
+    {
+        validPointCheck ??= (t) => !string.IsNullOrWhiteSpace(t?.ToString());
+        var resultingDict = new Dictionary<Point, TGrid>();
+
+        for (var lineIdx = 0; lineIdx < grid.Length; lineIdx++)
+        {
+            for (var posIdx = 0; posIdx < grid[lineIdx].Length; posIdx++)
+            {
+                var val = grid[lineIdx][posIdx];
+                if (skipFilterPoints || validPointCheck(val))
+                    resultingDict.Add(new Point(posIdx, lineIdx), val);
+            }
+        }
+
+        return resultingDict;
+    }
+
+    /// <summary>
     ///     Converts a jagged array to a two-dimensional array, filling missing elements with a specified default value.
     /// </summary>
     /// <remarks>The resulting array has a number of rows equal to the length of the jagged array and a number
