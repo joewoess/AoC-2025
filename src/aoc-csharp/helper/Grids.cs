@@ -231,6 +231,13 @@ public static class Grids
     /// are filled with the specified empty space character.</returns>
     public static char[,] AsCharGrid(this Dictionary<Point, char> map, char emptySpace = '.') => AsGrid(map, c => c == 0 ? emptySpace : c);
 
+    /// <summary>
+    ///     Converts line based string input to a two dimensional jagged char grid
+    /// </summary>
+    /// <param name="lines">line based string input</param>
+    /// <returns>Jagged two dimensional char grid</returns>
+    public static char[][] AsJaggedCharGrid(this string[] lines) => lines.Select(l => l.ToCharArray()).ToArray();
+
 
     /// <summary>
     ///     Applies a mapping function to each element within the specified rectangular area of a two-dimensional grid.

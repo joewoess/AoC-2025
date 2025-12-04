@@ -7,7 +7,7 @@ public sealed class Day04 : PuzzleBaseLines
     public override string? FirstPuzzle()
     {
         const int maxNeighborRollsExcl = 4;
-        var grid = Data.Select(line => line.ToCharArray()).ToArray();
+        var grid = Data.AsJaggedCharGrid();
         var countAccessibleRolls = 0;
 
         Printer.DebugMsg(Grids.AsPrintable(grid));
@@ -27,7 +27,7 @@ public sealed class Day04 : PuzzleBaseLines
     public override string? SecondPuzzle()
     {
         const int maxNeighborRollsExcl = 4;
-        var grid = Data.Select(line => line.ToCharArray()).ToArray();
+        var grid = Data.AsJaggedCharGrid();
         var countRemovedRolls = 0;
 
         var gridAsDict = grid.AsPointDict(validPointCheck: c => c != '.');
