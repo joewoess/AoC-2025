@@ -52,14 +52,6 @@ public sealed class Day05 : PuzzleBaseLines
             freshRanges.Add(new Interval(From, To));
         }
 
-        var freshIngredients = BigInteger.Zero;
-
-        // first try, but too many numbers
-        // var allValidIds = freshRanges
-        //                             .SelectMany(range => Util.IntegerRange(range.From, range.To, true))
-        //                             .Distinct()
-        //                             .ToList();
-
         var freshRangesSorted = freshRanges.OrderBy(r => r.From).ToList();
         for (var minIdx = 0; minIdx < freshRangesSorted.Count; minIdx++)
         {
@@ -88,7 +80,7 @@ public sealed class Day05 : PuzzleBaseLines
         }
         Printer.DebugPrintExcerpt(freshRangesSorted, "Sorted ranges without duplicates: ", separator: "\n");
 
-        freshIngredients = freshRangesSorted
+        var freshIngredients = freshRangesSorted
                             .Select(range => range.To - range.From + 1) // +1 since inclusive borders
                             .Aggregate((one, two) => one + two); // aggregate since .Sum() is not valid for BigInteger
 
