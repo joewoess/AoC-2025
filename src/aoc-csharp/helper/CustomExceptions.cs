@@ -11,3 +11,4 @@ public class UnknownDirectionException : Exception
 };
 
 public class InvalidLiveDisplayOperationException() : InvalidOperationException("Tried to perform an invalid operation on the live display context.");
+public class IsNotAWholeNumberException() : ArithmeticException("Tried to perform an integer operation on a real number");

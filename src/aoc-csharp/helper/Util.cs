@@ -15,6 +15,39 @@ public static class Util
             : Enumerable.Range(from, to - from + 1);
     }
 
+    /// <summary>
+    ///     Generates a range of whole numbers between start and end point, optionally with inclusive end.
+    ///     If the end point is lower than start point, it will return steps downward towards the start point.
+    /// </summary>
+    /// <typeparam name="T">Generic Number type to allow for types like long and BigInteger></typeparam>
+    /// <param name="from">Starting point</param>
+    /// <param name="to">End point, per default exclusive</param>
+    /// <param name="inclEnd">optional parameter to make the end point inclusive</param>
+    /// <returns>Enumerable of generic Number type between start and end point</returns>
+    /// <exception cref="IsNotAWholeNumberException">In case the start and end point were not integral numbers</exception>
+    public static IEnumerable<T> IntegerRange<T>(T from, T to, bool inclEnd = false) where T : INumber<T>
+    {
+        if (!(T.IsInteger(from) && T.IsInteger(to)))
+            throw new IsNotAWholeNumberException();
+
+        T current = from;
+        T step(T current) => from > to
+                                ? current - T.One
+                                : current + T.One;
+        Func<T, bool> check = (from > to, inclEnd) switch
+        {
+            (false, false) => current => current < to,
+            (false, true) => current => current <= to,
+            (true, false) => current => current > to,
+            (true, true) => current => current >= to,
+        };
+        while (check(current))
+        {
+            yield return current;
+            current = step(current);
+        }
+    }
+
     /** Returns an enumerable of pairs between the elements of a collection */
     public static IEnumerable<(T From, T To)> PairWithNextDeprecated<T>(this IEnumerable<T> collection) => collection.Zip(collection.Skip(1), (a, b) => (a, b));
 
@@ -98,13 +131,13 @@ public static class Util
        => self.Select((item, index) => (item, index));
 
     /** Sliding window over a string **/
-    public static IEnumerable<string> Window(this string self, int windowSize)
+    public static IEnumerable<IList<T>> Window<T>(this IList<T> self, int windowSize)
     {
-        if (self.Length >= windowSize)
+        if (self.Count >= windowSize)
         {
-            for (int idx = 0; idx < self.Length - windowSize; idx++)
+            for (int idx = 0; idx < self.Count - windowSize; idx++)
             {
-                yield return self[idx..(idx + windowSize)];
+                yield return self.Skip(idx).Take(windowSize).ToList();
             }
         }
     }

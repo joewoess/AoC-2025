@@ -8,20 +8,20 @@ All implemented solutions will be linked in the [Challenges table](##Challenges)
 
 ## Challenges
 
-| Day | Challenge                                              |                    C#                     |   F#   | Typescript | Rust | Python |
-| --: | :----------------------------------------------------- | :---------------------------------------: | :----: | :--------: | :--: | :----: |
-|   1 | [Secret Entrance](https://adventofcode.com/2025/day/1) | [Csharp](src/aoc-csharp/puzzles/Day01.cs) | FSharp | Typescript | Rust | Python |
-|   2 | [Gift Shop](https://adventofcode.com/2025/day/2)       | [Csharp](src/aoc-csharp/puzzles/Day02.cs) | FSharp | Typescript | Rust | Python |
-|   3 | [Lobby](https://adventofcode.com/2025/day/3)           | [Csharp](src/aoc-csharp/puzzles/Day03.cs) | FSharp | Typescript | Rust | Python |
-|   4 | [TBA](https://adventofcode.com/2025/day/4)             | [Csharp](src/aoc-csharp/puzzles/Day04.cs) | FSharp | Typescript | Rust | Python |
-|   5 | [TBA](https://adventofcode.com/2025/day/5)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|   6 | [TBA](https://adventofcode.com/2025/day/6)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|   7 | [TBA](https://adventofcode.com/2025/day/7)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|   8 | [TBA](https://adventofcode.com/2025/day/8)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|   9 | [TBA](https://adventofcode.com/2025/day/9)             |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  10 | [TBA](https://adventofcode.com/2025/day/10)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  11 | [TBA](https://adventofcode.com/2025/day/11)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
-|  12 | [TBA](https://adventofcode.com/2025/day/12)            |                  Csharp                   | FSharp | Typescript | Rust | Python |
+| Day | Challenge                                                  |                    C#                     |   F#   | Typescript | Rust | Python |
+| --: | :--------------------------------------------------------- | :---------------------------------------: | :----: | :--------: | :--: | :----: |
+|   1 | [Secret Entrance](https://adventofcode.com/2025/day/1)     | [Csharp](src/aoc-csharp/puzzles/Day01.cs) | FSharp | Typescript | Rust | Python |
+|   2 | [Gift Shop](https://adventofcode.com/2025/day/2)           | [Csharp](src/aoc-csharp/puzzles/Day02.cs) | FSharp | Typescript | Rust | Python |
+|   3 | [Lobby](https://adventofcode.com/2025/day/3)               | [Csharp](src/aoc-csharp/puzzles/Day03.cs) | FSharp | Typescript | Rust | Python |
+|   4 | [Printing Department](https://adventofcode.com/2025/day/4) | [Csharp](src/aoc-csharp/puzzles/Day04.cs) | FSharp | Typescript | Rust | Python |
+|   5 | [Cafeteria](https://adventofcode.com/2025/day/5)           | [Csharp](src/aoc-csharp/puzzles/Day05.cs) | FSharp | Typescript | Rust | Python |
+|   6 | [TBA](https://adventofcode.com/2025/day/6)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|   7 | [TBA](https://adventofcode.com/2025/day/7)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|   8 | [TBA](https://adventofcode.com/2025/day/8)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|   9 | [TBA](https://adventofcode.com/2025/day/9)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|  10 | [TBA](https://adventofcode.com/2025/day/10)                |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|  11 | [TBA](https://adventofcode.com/2025/day/11)                |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|  12 | [TBA](https://adventofcode.com/2025/day/12)                |                  Csharp                   | FSharp | Typescript | Rust | Python |
 
 ---
 
