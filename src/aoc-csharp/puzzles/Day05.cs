@@ -1,26 +1,23 @@
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 using Spectre.Console;
 
 namespace aoc_csharp.puzzles;
 
 public sealed class Day05 : PuzzleBaseLines
 {
+    // mostly for better named access
+    private record class Interval(BigInteger From, BigInteger To);
+    private readonly Func<string, Interval> intervalMapper = line => line.SplitAndMapToRecord(
+                                                                            BigInteger.Parse,
+                                                                            (pair) => new Interval(pair.First, pair.Second),
+                                                                            "-");
+
     public override string? FirstPuzzle()
     {
-        var freshRanges = new List<(BigInteger From, BigInteger To)>();
-        int lineIdx = 0;
-        for (; lineIdx < Data.Length; lineIdx++)
-        {
-            if (string.IsNullOrWhiteSpace(Data[lineIdx]))
-            {
-                lineIdx++;
-                break;
-            }
-            freshRanges.Add(Data[lineIdx].SplitAndMapToPair(BigInteger.Parse, "-"));
-        }
-
-        var ingredientList = Data.Skip(lineIdx).Select(BigInteger.Parse).ToList();
+        var (freshRanges, ingredientList) = Data.SplitSections()
+                                                .MapSectionsToPair(
+                                                    firstMapper: intervalMapper,
+                                                    secondMapper: BigInteger.Parse);
 
         var freshIngredients = 0;
 
@@ -36,23 +33,11 @@ public sealed class Day05 : PuzzleBaseLines
         return freshIngredients.ToString();
     }
 
-    private record class Interval(BigInteger From, BigInteger To);
-
     public override string? SecondPuzzle()
     {
-        var freshRanges = new List<Interval>();
-        for (var lineIdx = 0; lineIdx < Data.Length; lineIdx++)
-        {
-            if (string.IsNullOrWhiteSpace(Data[lineIdx]))
-            {
-                lineIdx++;
-                break;
-            }
-            var (From, To) = Data[lineIdx].SplitAndMapToPair(BigInteger.Parse, "-");
-            freshRanges.Add(new Interval(From, To));
-        }
-
+        var freshRanges = Data.SplitSections().First().Select(intervalMapper).ToArray();
         var freshRangesSorted = freshRanges.OrderBy(r => r.From).ToList();
+
         for (var minIdx = 0; minIdx < freshRangesSorted.Count; minIdx++)
         {
             for (var checkIdx = minIdx + 1; checkIdx < freshRangesSorted.Count; checkIdx++)

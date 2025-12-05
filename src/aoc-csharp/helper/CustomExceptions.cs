@@ -12,3 +12,8 @@ public class UnknownDirectionException : Exception
 
 public class InvalidLiveDisplayOperationException() : InvalidOperationException("Tried to perform an invalid operation on the live display context.");
 public class IsNotAWholeNumberException() : ArithmeticException("Tried to perform an integer operation on a real number");
+public class InvalidInputFormatParsingException : Exception
+{
+    public InvalidInputFormatParsingException() : base($"Invalid input for parsing") { }
+    public InvalidInputFormatParsingException(string message) : base($"Invalid input for parsing: {message}") { }
+};
