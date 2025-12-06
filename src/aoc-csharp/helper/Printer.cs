@@ -133,7 +133,11 @@ public static class Printer
                         string firstPuzzle = impl.ResolveFirstPuzzle();
                         var midTime = sw.Elapsed;
 
-                        // TODO print rule in debug panel between puzzles
+                        const string part2Header = "Part 2";
+                        const int spectreBorderSpacing = 5;
+                        var lineLength = Console.BufferWidth - spectreBorderSpacing - part2Header.Length;
+                        var separatorHalf = string.Join("", Enumerable.Repeat('-', lineLength / 2));
+                        DebugMsg($"{separatorHalf} {part2Header} {separatorHalf}");
 
                         AddStyledRow(day, impl.TypeName, firstPuzzle, midTime - startTime);
                         ctx.Refresh();
