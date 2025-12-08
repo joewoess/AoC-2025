@@ -9,21 +9,23 @@ namespace aoc_csharp.puzzles;
 public sealed class Day08 : PuzzleBaseLines
 {
     private record class Connection(Vector3 From, Vector3 To, double Distance);
+    private readonly Func<Vector3, Vector3, Connection> ConnectionMapper = (a, b) => new Connection(a, b, (b - a).Length());
+    private readonly Func<string[], Vector3[]> InputMapper = (list) => list
+            .Select(line => line.Split(',').Select(int.Parse).ToArray())
+            .Select(coords => new Vector3(coords[0], coords[1], coords[2])).ToArray();
+
 
     public override string? FirstPuzzle()
     {
         var numConnections = Config.IsDemo ? 10 : 1000;
         const int numTopCircuits = 3;
 
-        var coords = Data.Select(line => line.Split(',').Select(int.Parse).ToArray())
-                        .Select(coords => new Vector3(coords[0], coords[1], coords[2]))
-                        .ToImmutableArray();
-
-        var connections = coords.MapSelfCrossProduct((a, b) => new Connection(a, b, (b - a).Length()), ignoreSelfMap: true).ToList();
+        var coords = InputMapper(Data);
+        var connections = coords.MapSelfCrossProduct(ConnectionMapper, ignoreSelfMap: true).ToList();
         var connectionsToMake = connections.OrderBy(c => c.Distance).Take(numConnections).ToList();
         var circuits = coords.Select(c => new List<Vector3>() { c }).ToList();
 
-        foreach (var connection in connectionsToMake)
+        foreach (var (connection, idx) in connectionsToMake.WithIndex())
         {
             var from = circuits.Find(c => c.Contains(connection.From));
             var to = circuits.Find(c => c.Contains(connection.To));
@@ -34,12 +36,12 @@ public sealed class Day08 : PuzzleBaseLines
             circuits.Remove(from);
             circuits.Remove(to);
             circuits.Insert(idxNew, [.. from.Union(to)]);
-            if (circuits.Count < 10) Printer.DebugPrintExcerpt(circuits.Select(c => c.Count), "Circuit counts towards the end: ");
+
+            if (numConnections - idx < 10)
+                Printer.DebugPrintExcerpt(circuits.Select(c => c.Count).OrderByDescending(c => c), $"Circuit counts after {idx + 1} connections: ");
         }
 
         var topCircuits = circuits.OrderByDescending(c => c.Count).Take(numTopCircuits).ToArray();
-        Printer.DebugPrintExcerpt(topCircuits.Select(c => c.Count), "Top 3 sizes");
-
         var result = topCircuits.Aggregate(1, (a, b) => a * b.Count);
 
         Printer.DebugMsg($"Top 3 sizes multiply to: {result}");
@@ -48,11 +50,8 @@ public sealed class Day08 : PuzzleBaseLines
 
     public override string? SecondPuzzle()
     {
-        var coords = Data.Select(line => line.Split(',').Select(int.Parse).ToArray())
-                        .Select(coords => new Vector3(coords[0], coords[1], coords[2]))
-                        .ToImmutableArray();
-
-        var connections = coords.MapSelfCrossProduct((a, b) => new Connection(a, b, (b - a).Length()), ignoreSelfMap: true).ToList();
+        var coords = InputMapper(Data);
+        var connections = coords.MapSelfCrossProduct(ConnectionMapper, ignoreSelfMap: true).ToList();
         var connectionsToMake = connections.OrderBy(c => c.Distance).ToList();
         var circuits = coords.Select(c => new List<Vector3>() { c }).ToList();
 
@@ -68,7 +67,6 @@ public sealed class Day08 : PuzzleBaseLines
             circuits.Remove(from);
             circuits.Remove(to);
             circuits.Insert(idxNew, [.. from.Union(to)]);
-            if (circuits.Count < 10) Printer.DebugPrintExcerpt(circuits.Select(c => c.Count), "Circuit counts towards the end: ");
             if (circuits.Count == 1)
             {
                 mvpConnection = connection;
@@ -76,12 +74,11 @@ public sealed class Day08 : PuzzleBaseLines
             }
         }
 
-        // < 170629060 ?? 
         if (mvpConnection == null) throw new ImplementationException();
         Printer.DebugMsg($"Final connection: {mvpConnection}");
-        var result = mvpConnection.From.X * mvpConnection.To.X;
+        var result = (long)mvpConnection.From.X * (long)mvpConnection.To.X;
 
-        Printer.DebugMsg($"Final connection had this X * X result: {result}");
+        Printer.DebugMsg($"X coordinates: {mvpConnection.From.X} * {mvpConnection.To.X} = {result}");
         return result.ToString();
     }
 }

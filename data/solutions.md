@@ -11,7 +11,7 @@ This can be used to test different solutions later without having to commit the 
 |             5 |     3      |      14       |      888      | 344378119285354 |
 |             6 |  4277556   |    3263827    | 7098065460541 | 13807151830618  |
 |             7 |     21     |      40       |     1504      |  5137133207830  |
-|             8 |     40     |     25272     |     42840     |      part2      |
+|             8 |     40     |     25272     |     42840     |    170629052    |
 |             9 |   part1    |     part2     |     part1     |      part2      |
 |            10 |   part1    |     part2     |     part1     |      part2      |
 |            11 |   part1    |     part2     |     part1     |      part2      |
