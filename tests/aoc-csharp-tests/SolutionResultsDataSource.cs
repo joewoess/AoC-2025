@@ -7,7 +7,7 @@ public static class SolutionResultsDataSource
     public static Solutions? DemoSolutions { get; private set; } = null;
     public static Solutions? RealSolutions { get; private set; } = null;
 
-    public static void EnsureSolutionsLoaded()
+    public static void EnsureLoaded()
     {
         if (DemoSolutions is null || RealSolutions is null)
         {

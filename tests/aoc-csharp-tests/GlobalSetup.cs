@@ -7,6 +7,7 @@ public class GlobalHooks
     [Before(TestSession)]
     public static void SetUp()
     {
-        SolutionResultsDataSource.EnsureSolutionsLoaded();
+        SolutionResultsDataSource.EnsureLoaded();
+        ImplementationsDataSource.EnsureLoaded();
     }
 }
