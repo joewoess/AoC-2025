@@ -1,9 +1,8 @@
 using aoc_csharp.helper;
-using TUnit.Core.DataSources;
 
 namespace aoc_csharp_tests;
 
-public static class ImplementationsDataSource
+public class ImplementationsDataSource
 {
     public static Dictionary<int, List<IPuzzle>>? ImplementationsPerDay { get; private set; } = null;
 
@@ -15,5 +14,15 @@ public static class ImplementationsDataSource
                 .Where(kvp => kvp.Value.Count > 0)
                 .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
         }
+    }
+
+    /// <summary>
+    /// Provides test days dynamically based on implemented puzzles.
+    /// Only returns days that have implementations.
+    /// </summary>
+    public static IEnumerable<int> GetDaysWithImplementations()
+    {
+        EnsureLoaded();
+        return ImplementationsPerDay?.Keys.Order() ?? Enumerable.Empty<int>();
     }
 }

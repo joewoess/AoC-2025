@@ -1,4 +1,6 @@
-namespace aoc_csharp.helper;
+namespace aoc_csharp_tests;
+
+using aoc_csharp.helper;
 
 public class Solutions : Dictionary<int, (string? Part1, string? Part2)>;
 
