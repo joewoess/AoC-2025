@@ -134,7 +134,7 @@ public static class Printer
                         var midTime = sw.Elapsed;
 
                         const string part2Header = "Part 2";
-                        const int spectreBorderSpacing = 5;
+                        const int spectreBorderSpacing = 10;
                         var lineLength = Console.BufferWidth - spectreBorderSpacing - part2Header.Length;
                         var separatorHalf = string.Join("", Enumerable.Repeat('-', lineLength / 2));
                         DebugMsg($"{separatorHalf} {part2Header} {separatorHalf}");

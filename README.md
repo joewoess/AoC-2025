@@ -17,7 +17,7 @@ All implemented solutions will be linked in the [Challenges table](##Challenges)
 |   5 | [Cafeteria](https://adventofcode.com/2025/day/5)           | [Csharp](src/aoc-csharp/puzzles/Day05.cs) | FSharp | Typescript | Rust | Python |
 |   6 | [Trash Compactor](https://adventofcode.com/2025/day/6)     | [Csharp](src/aoc-csharp/puzzles/Day06.cs) | FSharp | Typescript | Rust | Python |
 |   7 | [Laboratories](https://adventofcode.com/2025/day/7)        | [Csharp](src/aoc-csharp/puzzles/Day07.cs) | FSharp | Typescript | Rust | Python |
-|   8 | [TBA](https://adventofcode.com/2025/day/8)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
+|   8 | [Playground](https://adventofcode.com/2025/day/8)          | [Csharp](src/aoc-csharp/puzzles/Day08.cs) | FSharp | Typescript | Rust | Python |
 |   9 | [TBA](https://adventofcode.com/2025/day/9)                 |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |  10 | [TBA](https://adventofcode.com/2025/day/10)                |                  Csharp                   | FSharp | Typescript | Rust | Python |
 |  11 | [TBA](https://adventofcode.com/2025/day/11)                |                  Csharp                   | FSharp | Typescript | Rust | Python |

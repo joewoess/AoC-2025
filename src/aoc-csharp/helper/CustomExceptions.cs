@@ -17,3 +17,4 @@ public class InvalidInputFormatParsingException : Exception
     public InvalidInputFormatParsingException() : base($"Invalid input for parsing") { }
     public InvalidInputFormatParsingException(string message) : base($"Invalid input for parsing: {message}") { }
 };
+public class ImplementationException() : InvalidOperationException("Generated an invalid state during a puzzle, most likely an error in the implementation") { }
